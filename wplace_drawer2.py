@@ -305,6 +305,19 @@ class WplaceDrawerApp:
         self.root = root
         self.root.title("Wplace Drawer (Testing Mode)")
         self.root.geometry("1120x720")
+        
+        # Bind hotkeys for calibration
+        self.root.bind('<F1>', lambda e: self.set_tl())
+        self.root.bind('<F2>', lambda e: self.set_tr())
+        self.root.bind('<F3>', lambda e: self.set_bl())
+        self.root.bind('<F4>', lambda e: self.set_br())
+        self.root.bind('<F5>', lambda e: self.set_palette_tl())
+        self.root.bind('<F6>', lambda e: self.set_palette_br())
+        self.root.bind('<F7>', lambda e: self.bind_palette_for_selected())
+        self.root.bind('<F8>', lambda e: self.request_stop())
+        
+        # Focus on root to capture key events
+        self.root.focus_set()
 
         # State
         self.src_image_path = None
@@ -406,10 +419,10 @@ class WplaceDrawerApp:
         self.colors_list.bind('<<ListboxSelect>>', self.on_color_select)
 
         Label(right, text="Калибровка (центры ячеек):").pack(anchor="w", padx=6, pady=(12, 4))
-        Button(right, text="1) Запомнить Top-Left (позиция мыши)", command=self.set_tl).pack(fill="x", padx=6, pady=2)
-        Button(right, text="2) Запомнить Top-Right (позиция мыши)", command=self.set_tr).pack(fill="x", padx=6, pady=2)
-        Button(right, text="3) Запомнить Bottom-Left (позиция мыши)", command=self.set_bl).pack(fill="x", padx=6, pady=2)
-        Button(right, text="4) Запомнить Bottom-Right (позиция мыши)", command=self.set_br).pack(fill="x", padx=6, pady=2)
+        Button(right, text="1) Top-Left (F1)", command=self.set_tl).pack(fill="x", padx=6, pady=2)
+        Button(right, text="2) Top-Right (F2)", command=self.set_tr).pack(fill="x", padx=6, pady=2)
+        Button(right, text="3) Bottom-Left (F3)", command=self.set_bl).pack(fill="x", padx=6, pady=2)
+        Button(right, text="4) Bottom-Right (F4)", command=self.set_br).pack(fill="x", padx=6, pady=2)
         self.calib_lbl = Label(right, text="TL: -, TR: -, BL: -, BR: -")
         self.calib_lbl.pack(anchor="w", padx=6)
 
@@ -422,8 +435,8 @@ class WplaceDrawerApp:
         Button(right, text="Сохранить привязки", command=self.save_palette_bindings).pack(fill="x", padx=6, pady=2)
         Button(right, text="Загрузить привязки", command=self.load_palette_bindings).pack(fill="x", padx=6, pady=2)
         Label(right, text="Область палитры (для авто-поиска):").pack(anchor="w", padx=6, pady=(12, 4))
-        Button(right, text="Указать TL палитры (позиция мыши)", command=self.set_palette_tl).pack(fill="x", padx=6, pady=2)
-        Button(right, text="Указать BR палитры (позиция мыши)", command=self.set_palette_br).pack(fill="x", padx=6, pady=2)
+        Button(right, text="TL палитры (F5)", command=self.set_palette_tl).pack(fill="x", padx=6, pady=2)
+        Button(right, text="BR палитры (F6)", command=self.set_palette_br).pack(fill="x", padx=6, pady=2)
         # Palette acquisition / load-save
         Label(right, text="Алгоритм подбора цвета:").pack(anchor="w", padx=6, pady=(12, 4))
         algo_frame = Frame(right)
@@ -453,7 +466,7 @@ class WplaceDrawerApp:
         Button(right, text="Нарисовать все цвета (по порядку)", command=self.draw_all_colors).pack(fill="x", padx=6, pady=2)
         Button(right, text="Стоп", command=self.request_stop).pack(fill="x", padx=6, pady=(6, 2))
 
-        Label(right, text="Подсказки:\n- Перед стартом переключитесь в браузер\n- Привяжите координаты цветов палитры\n- Failsafe: мышь в левый верхний угол", justify="left").pack(anchor="w", padx=6, pady=(10, 6))
+        Label(right, text="Подсказки:\nГорячие клавиши: F1-F4 - калибровка сетки\nF5-F6 - калибровка палитры, F7 - запомнить цвет\nF8 - стоп. Failsafe: мышь в левый верхний угол", justify="left").pack(anchor="w", padx=6, pady=(10, 6))
 
     # ---------- Image handling ----------
     def open_image(self):
